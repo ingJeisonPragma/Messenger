@@ -78,10 +78,10 @@ jobs:
 
       - name: Build and push Docker image to ECR
         run: |
-          aws ecr-public get-login-password --region us-east-2 | docker login --username AWS --password-stdin ${{env.AWS_ECR_REPO_PATH}}
-          docker build -t ${{env.AWS_ECR_REPO_NAME}} .
-          docker tag ${{env.AWS_ECR_REPO_NAME}}:v1 ${{env.AWS_ECR_REPO_LINK}}:v1
-          docker push ${{env.AWS_ECR_REPO_LINK}}:v1         
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin ${{ env.AWS_ECR_REPO_PATH }}
+          docker build -t ${{ env.AWS_ECR_REPO_NAME }} .
+          docker tag ${{ env.AWS_ECR_REPO_NAME }}:v1 ${{ env.AWS_ECR_REPO_LINK }}:v1
+          docker push ${{ env.AWS_ECR_REPO_LINK }}:v1         
   deploy-eb:
     needs: deploy-ecr
     runs-on: ubuntu-latest
