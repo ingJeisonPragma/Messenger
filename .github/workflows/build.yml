@@ -58,10 +58,10 @@ jobs:
           dotnet build --no-incremental
           dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-deploy-ecr:
-    #needs: build-and-test
+  deploy-ecr:
+    name: Build Image
+    needs: build
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
         with:
@@ -82,10 +82,9 @@ deploy-ecr:
           docker build -t ${{env.AWS_ECR_REPO_NAME}} .
           docker tag ${{env.AWS_ECR_REPO_NAME}}:v1 ${{env.AWS_ECR_REPO_LINK}}:v1
           docker push ${{env.AWS_ECR_REPO_LINK}}:v1         
-deploy-eb:
+  deploy-eb:
     needs: deploy-ecr
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout source code
         uses: actions/checkout@v3
